@@ -275,14 +275,34 @@ public class EthernetAddress
             while (en.hasMoreElements()) {
                 NetworkInterface nint = en.nextElement();
                 if (!nint.isLoopback()) {
-                    byte[] data = nint.getHardwareAddress();
-                    if ((data != null) && (data.length == 6)) {
-                        return new EthernetAddress(data);
+                    EthernetAddress addr = fromInterface(nint);
+                    if (addr != null) {
+                        return addr;
                     }
                 }
             }
         } catch (java.net.SocketException e) {
             // fine, let's take is as signal of not having any interfaces
+        }
+        return null;
+    }
+
+    /**
+     * A factory method to return the ethernet address of a specified network interface.
+     *
+     * @since 4.1
+     */
+    public static EthernetAddress fromInterface(NetworkInterface nint)
+    {
+        if (nint != null) {
+            try {
+                byte[] data = nint.getHardwareAddress();
+                if (data != null && data.length == 6) {
+                    return new EthernetAddress(data);
+                }
+            } catch (SocketException e) {
+                // could not get address
+            }
         }
         return null;
     }
@@ -300,11 +320,14 @@ public class EthernetAddress
      *
      * @since 4.1
      */
-    public static EthernetAddress fromEgressInterface() 
+    public static EthernetAddress fromEgressInterface()
     {
         String roots = "abcdefghijklm";
         int index = new Random().nextInt(roots.length());
         String name = roots.charAt(index) + ".root-servers.net";
+        // Specify standard/default port DNS uses; more robust on some platforms
+        // (MacOS/JDK 17), see:
+        // https://github.com/cowtowncoder/java-uuid-generator/pull/59
         InetSocketAddress externalAddress = new InetSocketAddress(name, 53);
         if (externalAddress.isUnresolved()) {
             externalAddress = new InetSocketAddress("1.1.1.1", 0);
@@ -323,7 +346,7 @@ public class EthernetAddress
      *
      * @since 4.1
      */
-    public static EthernetAddress fromEgressInterface(InetSocketAddress externalSocketAddress) 
+    public static EthernetAddress fromEgressInterface(InetSocketAddress externalSocketAddress)
     {
         DatagramSocket socket = null;
         try {

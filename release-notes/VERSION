@@ -20,6 +20,9 @@ Releases
  (contributed by Hal H)
 #46: Add support for Proposed type v7 (epoch-based time uuid)
  (contributed by Hal H)
+#52: Add `Generators.egressTimeBasedGenerator()` method that constructs `TimedBasedGenerator`
+  with a sensible choice of interface
+ (contributed by Paul G)
 #55: Add `Main-Class` manifest to make jar invoke `Jug` class
 #57: Add constants for "Nil UUID", "Max UUID" (from draft "new UUID" spec) in `UUIDUtil`
 #65: Enable "Reproducible Build"
