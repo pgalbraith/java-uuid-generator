@@ -275,34 +275,14 @@ public class EthernetAddress
             while (en.hasMoreElements()) {
                 NetworkInterface nint = en.nextElement();
                 if (!nint.isLoopback()) {
-                    EthernetAddress addr = fromInterface(nint);
-                    if (addr != null) {
-                        return addr;
+                    byte[] data = nint.getHardwareAddress();
+                    if ((data != null) && (data.length == 6)) {
+                        return new EthernetAddress(data);
                     }
                 }
             }
         } catch (java.net.SocketException e) {
             // fine, let's take is as signal of not having any interfaces
-        }
-        return null;
-    }
-
-    /**
-     * A factory method to return the ethernet address of a specified network interface.
-     *
-     * @since 4.1
-     */
-    public static EthernetAddress fromInterface(NetworkInterface nint) 
-    {
-        if (nint != null) {
-            try {
-                byte[] data = nint.getHardwareAddress();
-                if (data != null && data.length == 6) {
-                    return new EthernetAddress(data);
-                }
-            } catch (SocketException e) {
-                // could not get address
-            }
         }
         return null;
     }
