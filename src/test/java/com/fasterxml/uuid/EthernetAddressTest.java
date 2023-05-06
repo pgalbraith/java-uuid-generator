@@ -17,6 +17,7 @@
 
 package com.fasterxml.uuid;
 
+import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -1310,9 +1311,6 @@ public class EthernetAddressTest extends TestCase
         assertNotNull(addr.toString());
     }
 
-    // 20-Jun-2022, tatu: Not sure why @Ignore didn't work but
-    //   need to comment out until [#52] is fully resolved
-/*
     public void testFromEgressInterfaceRoot() throws Exception
     {
         InetSocketAddress extAddr = new InetSocketAddress("a.root-servers.net", 0);
@@ -1327,7 +1325,6 @@ public class EthernetAddressTest extends TestCase
         assertNotNull(ifAddr);
         assertNotNull(ifAddr.toString());
     }
-    */
 
     public void testDefaultTimeBasedGenerator()
     {
